@@ -1,6 +1,3 @@
-#CED
---
-
 The Contextual Edit Distance
 ============================
 

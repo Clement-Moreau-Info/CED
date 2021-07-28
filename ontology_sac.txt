@@ -1,0 +1,7 @@
+All move_act shopping cultural sport
+move_act human_power motorized
+human_power 1 2
+motorized 3 4
+shopping 5 6
+cultural 7 8 9
+sport 9 10 11

@@ -37,5 +37,5 @@ The sim:Σ x Σ -> [0,1] function defined the similarity between all symbols in 
 
 Basicaly, we can use the trival distance function. 
 
-The Wu-Palmer similarity function used a knowledge graph (i.e., ontology) for symbol comparison. An example of graph structure is given in the file "ontology_sac.txt". 
+The Wu-Palmer similarity function used a knowledge graph (i.e., ontology) for symbol comparison. An example of graph structure is given in the file "ontology.txt". 
 

@@ -4,12 +4,18 @@ import numpy as np
 from numba import prange
 from typing import Callable, TypeVar
 
-
+##
+# Temporal vector 
+#
+# e     : Contextual edit operation
+# beta  : Boundary of the fuzzy function
+##
 def temporal_vec(e: Cxt_edit, beta: int) -> List[float]:
-    mu = fuzz.trapmf(np.arange(0, np.sum(len(e.S_i)+1)),
+    # Defined a fuzzy encoding function (+ 1 to ensure non empty interval)
+    mu = fuzz.trapmf(np.arange(0, len(e.S_i)+1),
                      [e.i_edit - beta, e.i_edit, e.i_edit, e.i_edit + beta])
     if e.op == Edit.MOD:
-        return mu[:-1]
+        return mu[:-1] # disregard the + 1
     if e.op == Edit.ADD:
         return [mu[i] if i < e.i_edit else
                 (mu[e.i_edit - 1] if i == e.i_edit else mu[i + 1])
@@ -17,13 +23,26 @@ def temporal_vec(e: Cxt_edit, beta: int) -> List[float]:
     else:
         return [mu[i] if i != e.i_edit else 0 for i in range(len(e.S_i))]
 
-
+##
+# Gamma cost function  
+#
+# e     : Contextual edit operation
+# sim   : Similarity between symbol
+# beta  : Boundary of the fuzzy function
+##
 def gamma_cost(e: Cxt_edit, sim: Callable[[str, str], float], beta: int) -> float:
     nu = temporal_vec(e, beta)
     ctx_vector = [sim(e.S_i[k], e.x) * nu[k] for k in range(len(e.S_i))]
     return 1 - max(ctx_vector)
 
-
+##
+# One sided CED 
+#
+# S1    : Semantic sequence 1
+# S2    : Semantic sequence 2
+# sim   : Similarity between symbol
+# beta  : Boundary of the fuzzy function
+##
 def one_sided_ced(S1: List[str], S2: List[str], sim: Callable[[str, str], float], beta: int) -> float:
     dist = np.zeros((len(S1) + 1, len(S2) + 1))
     for i in prange(len(S1) + 1):
@@ -44,6 +63,13 @@ def one_sided_ced(S1: List[str], S2: List[str], sim: Callable[[str, str], float]
                                        dist[i, j - 1] + cost_add), 2)
     return dist[len(S1), len(S2)]
 
-
+##
+# CED 
+#
+# S1    : Semantic sequence 1
+# S2    : Semantic sequence 2
+# sim   : Similarity between symbol
+# beta  : Boundary of the fuzzy function
+##
 def ced(S1: List[str], S2: List[str], sim: Callable[[str, str], float], beta: int) -> float:
     return max(one_sided_ced(S1, S2, sim, beta), one_sided_ced(S2, S1, sim, beta))

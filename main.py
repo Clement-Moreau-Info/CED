@@ -6,7 +6,7 @@ import pandas as pd
 import multiprocessing as mp
 
 # Path to ontology
-path_onto = "ontology_sac.txt"
+path_onto = "ontology.txt"
 ontology = nx.read_adjlist(path_onto, create_using=nx.DiGraph)
 
 

@@ -25,6 +25,20 @@ def sim(x: str, y: str) -> float:
     return wu_palmer(x, y)
 
 
+##
+# Extraction of all semantic sequences from a file .csv
+# path : path of the file
+# sep  : separator
+# id   : id sequence colonne
+##
+def extract_seq(path: str, sep=";", id="id") -> List[List[str]]:
+    df = pd.read_csv(path, sep=sep)
+    max_seq = max(df[id]) + 1
+
+    return [[x for x in df[df[id] == i].iloc[:, 1].values.tolist()]
+               for i in range(1, max_seq)]
+
+
 if __name__ == '__main__':
     S1 = ['1', '7', '1', '11', '2', '5', '2', '9']
     S2 = ['1', '10', '1', '7', '3', '10']

@@ -52,7 +52,6 @@ where :
 
 This function returns the temporal vector `nu` used in `gamma_cost` function. 
 
-/!\ 
 This function uses the `skfuzzy` package, please, install it this the command line in your terminal :
 
 `pip install -U scikit-fuzzy`
@@ -60,7 +59,6 @@ This function uses the `skfuzzy` package, please, install it this the command li
 or in your Anaconda/miniconda terminal
 
 `conda install -c conda-forge scikit-fuzzy`
-/!\
 
 Computation of each case of the vector is detailled in the thesis page 95-96.
 
@@ -97,7 +95,7 @@ This function computes the equation (5.2) detailled in the thesis.
 
 /!\ This function is not symmetric /!\
 
-This function is computed using Dynamic Programming (see [Wagned-Fisher algorithm](https://en.wikipedia.org/wiki/Wagner%E2%80%93Fischer_algorithm)
+This function is computed using Dynamic Programming (see [Wagned-Fisher algorithm](https://en.wikipedia.org/wiki/Wagner%E2%80%93Fischer_algorithm))
 
 ### `ced` function 
 
@@ -153,13 +151,12 @@ where :
 
 This function extracts sequences from a .csv file such the example file given `test_seq.csv`.
 
-
-
-## About Beta variable
 -------------
 
-Temporal vector is encoded by a fuzzy membership function. `Beta` variable controls the flateness of this function. 
+## About `beta` parameter
 
-- `Beta` -> ∞ <=> All symbols in sequences are taken into account in sequences. 
+Temporal vector is encoded by a fuzzy membership function. `beta` variable controls the flateness of this function. 
 
-- `Beta` -> 0 <=> Classical edit distance
+- `beta` -> ∞ <=> All symbols in sequences are taken into account in sequences. 
+
+- `beta` -> 0 <=> Classical edit distance

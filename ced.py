@@ -13,15 +13,15 @@ from typing import Callable, TypeVar
 def temporal_vec(e: Cxt_edit, beta: int) -> List[float]:
     # Defined a fuzzy encoding function (+ 1 to ensure non empty interval)
     mu = fuzz.trapmf(np.arange(0, len(e.S_i)+1),
-                     [e.i_edit - beta, e.i_edit, e.i_edit, e.i_edit + beta])
+                     [e.k_edit - beta, e.k_edit, e.k_edit, e.k_edit + beta])
     if e.op == Edit.MOD:
         return mu[:-1] # disregard the + 1
     if e.op == Edit.ADD:
-        return [mu[i] if i < e.i_edit else
-                (mu[e.i_edit - 1] if i == e.i_edit else mu[i + 1])
+        return [mu[i] if i < e.k_edit else
+                (mu[e.k_edit - 1] if i == e.k_edit else mu[i + 1])
                 for i in range(len(e.S_i))]
     else:
-        return [mu[i] if i != e.i_edit else 0 for i in range(len(e.S_i))]
+        return [mu[i] if i != e.k_edit else 0 for i in range(len(e.S_i))]
 
 ##
 # Gamma cost function  
@@ -36,7 +36,7 @@ def gamma_cost(e: Cxt_edit, sim: Callable[[str, str], float], beta: int) -> floa
     return 1 - max(ctx_vector)
 
 ##
-# One sided CED 
+# One sided CED. Computation by dynamic programming
 #
 # S1    : Semantic sequence 1
 # S2    : Semantic sequence 2

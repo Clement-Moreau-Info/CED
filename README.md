@@ -43,7 +43,7 @@ Code of the Contextual Edit Distance
 
 ### `temporal_vec` function
 
-Signature : temporal_vec(e: Cxt_edit, beta: int) -> List[float]
+Signature : `temporal_vec(e: Cxt_edit, beta: int) -> List[float]
 
 where : 
 - `e` is a Contextual edit operation
@@ -65,7 +65,7 @@ Computation of each case of the vector is detailled in the thesis page 95-96.
 
 ### `gamma_cost` function
 
-Signature : gamma_cost(e: Cxt_edit, sim: Callable[[str, str], float], beta: int) -> float
+Signature : `gamma_cost(e: Cxt_edit, sim: Callable[[str, str], float], beta: int) -> float`
 
 where : 
 
@@ -79,7 +79,7 @@ This function computes the equation (5.1) detailled in the thesis.
 
 ### `one_sided_ced` function 
 
-Signature : one_sided_ced(S1: List[str], S2: List[str], sim: Callable[[str, str], float], beta: int) -> float
+Signature : `one_sided_ced(S1: List[str], S2: List[str], sim: Callable[[str, str], float], beta: int) -> float`
 
 where : 
 
@@ -99,7 +99,7 @@ This function is computed using Dynamic Programming (see [Wagned-Fisher algorith
 
 ### `ced` function 
 
-Signature : ced(S1: List[str], S2: List[str], sim: Callable[[str, str], float], beta: int) -> float
+Signature : `ced(S1: List[str], S2: List[str], sim: Callable[[str, str], float], beta: int) -> float`
 
 where : 
 
@@ -122,7 +122,7 @@ This file contains similarity functions like :
 
 ### `wu_palmer` function
 
-Signature : wu_palmer(x: str, y: str, rootnode="All", onto=ontology) -> float
+Signature : `wu_palmer(x: str, y: str, rootnode="All", onto=ontology) -> float`
 
 where : 
 
@@ -139,7 +139,7 @@ This function return the Wu-Palmer similarity between `x` and `y` according to t
 
 ### `extract_seq` function
 
-Signature : extract_seq(path: str, sep=";", id="id") -> List[List[str]]
+Signature : `extract_seq(path: str, sep=";", id="id") -> List[List[str]]`
 
 where : 
 

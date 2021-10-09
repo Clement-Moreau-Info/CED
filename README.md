@@ -15,12 +15,147 @@ Used in papers :
 > C Moreau, T Devogele, L Etienne, V Peralta, C de Runz
 > arXiv preprint arXiv:2012.04767, 2020
 
-
 --
 
-## About parameters:
+# Description of files 
 
-### Beta variable
+## `cxt_edit.py`
+
+Description of a Contextual Edit Operation. 
+
+For short remember, a contextual edit operation e is a 4-tuple such that : 
+
+`e = (op, x, k_edit, S_i)`
+
+where :
+
+- `op` is an edit operation (Enumeration MOD, ADD, DEL)
+
+- `str:x` is the new symbol 
+
+- `int:k_edit` is the position of edition 
+
+- `List[str]:S_i` is the sequence of symbols
+
+## `ced.py`
+
+Code of the Contextual Edit Distance
+
+### `temporal_vec` function
+
+Signature : temporal_vec(e: Cxt_edit, beta: int) -> List[float]
+
+where : 
+- `e` is a Contextual edit operation
+
+- `beta` is the Boundary of the fuzzy function
+
+This function returns the temporal vector `nu` used in `gamma_cost` function. 
+
+/!\ 
+This function uses the `skfuzzy` package, please, install it this the command line in your terminal :
+
+`pip install -U scikit-fuzzy`
+
+or in your Anaconda/miniconda terminal
+
+`conda install -c conda-forge scikit-fuzzy`
+/!\
+
+Computation of each case of the vector is detailled in the thesis page 95-96.
+
+
+### `gamma_cost` function
+
+Signature : gamma_cost(e: Cxt_edit, sim: Callable[[str, str], float], beta: int) -> float
+
+where : 
+
+- `e` is a Contextual edit operation
+
+- `sim` is the similarity between symbols
+
+- `beta` is the Boundary of the fuzzy function
+
+This function computes the equation (5.1) detailled in the thesis. 
+
+### `one_sided_ced` function 
+
+Signature : one_sided_ced(S1: List[str], S2: List[str], sim: Callable[[str, str], float], beta: int) -> float
+
+where : 
+
+- `S1` is the semantic sequence 1
+
+- `S2` is the emantic sequence 2
+
+- `sim` is the similarity between symbols
+
+- `beta` is the Boundary of the fuzzy function
+
+This function computes the equation (5.2) detailled in the thesis.
+
+/!\ This function is not symmetric /!\
+
+This function is computed using Dynamic Programming (see [Wagned-Fisher algorithm](https://en.wikipedia.org/wiki/Wagner%E2%80%93Fischer_algorithm)
+
+### `ced` function 
+
+Signature : ced(S1: List[str], S2: List[str], sim: Callable[[str, str], float], beta: int) -> float
+
+where : 
+
+- `S1` is the semantic sequence 1
+
+- `S2` is the emantic sequence 2
+
+- `sim` is the similarity between symbols
+
+- `beta` is the Boundary of the fuzzy function
+
+This function computes the CED distance according the equation (5.3) detailled in the thesis.
+
+
+## `main.py`
+
+Main file to run. 
+
+This file contains similarity functions like : 
+
+### `wu_palmer` function
+
+Signature : wu_palmer(x: str, y: str, rootnode="All", onto=ontology) -> float
+
+where : 
+
+- `x` is the first concept
+
+- `y` is the second concept
+
+- `rootnode` is the root node of the knowledge DAG 
+
+- `onto` is the ontology graph create with networkx library.
+
+This function return the Wu-Palmer similarity between `x` and `y` according to the ontology `onto` and the equation (3.4) in the thesis.
+
+
+### `extract_seq` function
+
+Signature : extract_seq(path: str, sep=";", id="id") -> List[List[str]]
+
+where : 
+
+- `path` is the path to the .csv file of sequences
+
+- `sep` is the separator
+
+- `id` is the name of id column
+
+This function extracts sequences from a .csv file such the example file given `test_seq.csv`.
+
+
+
+## About Beta variable
 -------------
 
 Temporal vector is encoded by a fuzzy membership function. `Beta` variable controls the flateness of this function. 
@@ -28,14 +163,3 @@ Temporal vector is encoded by a fuzzy membership function. `Beta` variable contr
 - `Beta` -> ∞ <=> All symbols in sequences are taken into account in sequences. 
 
 - `Beta` -> 0 <=> Classical edit distance
-
-
-### Sim function
-------------
-
-The sim:Σ x Σ -> [0,1] function defined the similarity between all symbols in the alphabet of sequences Σ. 
-
-Basicaly, we can use the trival distance function. 
-
-The Wu-Palmer similarity function used a knowledge graph (i.e., ontology) for symbol comparison. An example of graph structure is given in the file "ontology.txt". 
-

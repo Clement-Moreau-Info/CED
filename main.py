@@ -1,34 +1,18 @@
-from cxt_edit import *
 from ced import *
 import networkx as nx
-from functools import lru_cache
+from functools import lru_cache, partial
 import pandas as pd
 import multiprocessing as mp
 
-# Path to ontology
-path_onto = "ontology.txt"
-ontology = nx.read_adjlist(path_onto, create_using=nx.DiGraph)
 
-
-def trivial(x: str, y: str) -> float:
+def trivial(x: T, y: T) -> float:
     return 1 if x != y else 0
 
-##
-# Wu-Palmer similarity
-# x         : Concept 1 to compare
-# y         : Concept 2 to compare
-# rootnode  : Root node of the knowledge DAG 
-# onto      : Ontology graph create with networkx library
-##
+
 @lru_cache(maxsize=100000)
-def wu_palmer(x: str, y: str, rootnode="All", onto=ontology) -> float:
+def wu_palmer(x: str, y: str, onto: nx.DiGraph, rootnode="All") -> float:
     return (2.0 * nx.shortest_path_length(onto, rootnode, nx.lowest_common_ancestor(onto, x, y))) / (
             nx.shortest_path_length(onto, rootnode, x) + nx.shortest_path_length(onto, rootnode, y))
-
-
-# Define the similarity used
-def sim(x: str, y: str) -> float:
-    return wu_palmer(x, y)
 
 
 ##
@@ -40,22 +24,26 @@ def sim(x: str, y: str) -> float:
 def extract_seq(path: str, sep=";", id="id") -> List[List[str]]:
     df = pd.read_csv(path, sep=sep)
     max_seq = max(df[id]) + 1
-
     return [[x for x in df[df[id] == i].iloc[:, 1].values.tolist()]
-               for i in range(1, max_seq)]
+            for i in range(1, max_seq)]
+
+
+def main():
+    # Path to ontology
+    path_onto = "ontology_sac.txt"
+    ontology = nx.read_adjlist(path_onto, create_using=nx.DiGraph)
+
+    seq1 = ['1', '7', '1', '11', '2', '5', '2', '9']
+    seq2 = ['1', '10', '1', '7', '3', '10']
+
+    # Extract sequences
+    seq = extract_seq("test_seq.csv")
+
+    e = CxtEdit(Edit.MOD, '8', 4, seq1)
+    nu = temporal_vec(e, 4)
+    print(nu)
+    print("CED(seq1, seq2) = ", ced(seq1, seq2, partial(wu_palmer, onto=ontology), 4))
 
 
 if __name__ == '__main__':
-    S1 = ['1', '7', '1', '11', '2', '5', '2', '9']
-    S2 = ['1', '10', '1', '7', '3', '10']
-    # Extract sequences from a file
-    # seq = extract_seq("test_seq.csv")
-    # print(seq)
-    # Example of Contextual Edit Operation
-    e = Cxt_edit(Edit.MOD, '8', 4, S1)
-    # Temporal vector applied for e for a beta boundary of 4 symbols
-    nu = temporal_vec(e, 4)
-    # Print temporal vector
-    print(nu)
-    # Compute CED 
-    print("CED(S1,S2) = ", ced(S1, S2, sim, 4))
+    main()

@@ -52,7 +52,7 @@ where :
 
 This function returns the temporal vector `nu` used in `gamma_cost` function. 
 
-This function uses the `skfuzzy` package, please, install it this the command line in your terminal :
+This function uses the [`skfuzzy` package](https://pythonhosted.org/scikit-fuzzy/), please, install it this the command line in your terminal :
 
 `pip install -U scikit-fuzzy`
 

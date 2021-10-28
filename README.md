@@ -31,11 +31,11 @@ where :
 
 - `op` is an edit operation (Enumeration MOD, ADD, DEL)
 
-- `str:x` is the new symbol 
+- `T:x` is the new symbol 
 
 - `int:k_edit` is the position of edition 
 
-- `List[str]:S_i` is the sequence of symbols
+- `List[T]:S_i` is the sequence of symbols
 
 ## `ced.py`
 
@@ -83,9 +83,9 @@ Signature : `one_sided_ced(S1: List[str], S2: List[str], sim: Callable[[str, str
 
 where : 
 
-- `S1` is the semantic sequence 1
+- `seq1` is the semantic sequence 1
 
-- `S2` is the emantic sequence 2
+- `seq2` is the emantic sequence 2
 
 - `sim` is the similarity between symbols
 
@@ -103,9 +103,9 @@ Signature : `ced(S1: List[str], S2: List[str], sim: Callable[[str, str], float],
 
 where : 
 
-- `S1` is the semantic sequence 1
+- `seq1` is the semantic sequence 1
 
-- `S2` is the emantic sequence 2
+- `seq2` is the emantic sequence 2
 
 - `sim` is the similarity between symbols
 

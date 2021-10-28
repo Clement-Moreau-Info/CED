@@ -1,5 +1,8 @@
 from enum import Enum
-from typing import List
+from typing import List, TypeVar
+
+# To be generic
+T = TypeVar('T')
 
 ##
 # Different edit operations
@@ -17,9 +20,9 @@ class Edit(Enum):
 # k_edit    : position of edition (in [1, len(S_i)]) 
 # S_i       : Sequence of symbols
 ##
-class Cxt_edit:
-    def __init__(self, op: Edit, x: str, k_edit: int, S_i: List[str]):
+class CxtEdit:
+    def __init__(self, op: Edit, x: T, k_edit: int, seq_i: List[T]):
         self.op = op
         self.x = x
-        self.k_edit = k_edit - 1 # Begin at 0
-        self.S_i = S_i
+        self.k_edit = k_edit - 1
+        self.seq_i = seq_i

@@ -15,13 +15,12 @@ def wu_palmer(x: str, y: str, onto: nx.DiGraph, rootnode="All") -> float:
             nx.shortest_path_length(onto, rootnode, x) + nx.shortest_path_length(onto, rootnode, y))
 
 
-##
-# Extraction of all semantic sequences from a file .csv
-# path : path of the file
-# sep  : separator
-# id   : id sequence colonne
-##
 def extract_seq(path: str, sep=";", id="id") -> List[List[str]]:
+    """
+    :param path:    Path of the file
+    :param sep:     Separator of the .csv file
+    :param id:      Id sequence colonne
+    """
     df = pd.read_csv(path, sep=sep)
     max_seq = max(df[id]) + 1
     return [[x for x in df[df[id] == i].iloc[:, 1].values.tolist()]

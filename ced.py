@@ -4,13 +4,13 @@ import numpy as np
 from numba import prange
 from typing import Callable
 
-##
-# Temporal vector 
-#
-# e     : Contextual edit operation
-# beta  : Boundary of the fuzzy function
-##
+
 def temporal_vec(e: CxtEdit, beta: int) -> List[float]:
+    """
+    :param e:       Contextual edit operation
+    :param beta:    Boundary of the fuzzy function
+    :return:        Temporal fuzzy vector
+    """
     # Defined a fuzzy encoding function (+ 1 to ensure non empty interval)
     mu = fuzz.trapmf(np.arange(0, len(e.seq_i)+1),
                      [e.k_edit - beta, e.k_edit, e.k_edit, e.k_edit + beta])
@@ -23,27 +23,27 @@ def temporal_vec(e: CxtEdit, beta: int) -> List[float]:
     else:
         return [mu[k] if k != e.k_edit else 0 for k in range(len(e.seq_i))]
 
-##
-# Gamma cost function  
-#
-# e     : Contextual edit operation
-# sim   : Similarity between symbol
-# beta  : Boundary of the fuzzy function
-##
+
 def gamma_cost(e: CxtEdit, sim: Callable[[T, T], float], beta: int) -> float:
+    """
+    :param e:       Contextual edit operation
+    :param sim:     Similarity between symbol
+    :param beta:    Boundary of the fuzzy function
+    :return:        Cost of the edit operation e
+    """
     nu = temporal_vec(e, beta)
     ctx_vector = [sim(e.seq_i[k], e.x) * nu[k] for k in range(len(e.seq_i))]
     return 1 - max(ctx_vector)
 
-##
-# One sided CED. Computation by dynamic programming
-#
-# seq1  : Semantic sequence 1
-# seq2  : Semantic sequence 2
-# sim   : Similarity between symbol
-# beta  : Boundary of the fuzzy function
-##
+
 def one_sided_ced(seq1: List[T], seq2: List[T], sim: Callable[[T, T], float], beta: int) -> float:
+    """
+    :param seq1:    Semantic sequence 1
+    :param seq2:    Semantic sequence 2
+    :param sim:     Similarity between symbol
+    :param beta:    Boundary of the fuzzy function
+    :return:        One-sided CED (edit seq1 to seq2)
+    """
     dist = np.zeros((len(seq1) + 1, len(seq2) + 1))
     for i in prange(len(seq1) + 1):
         for j in prange(len(seq2) + 1):
@@ -63,13 +63,13 @@ def one_sided_ced(seq1: List[T], seq2: List[T], sim: Callable[[T, T], float], be
                                        dist[i, j - 1] + cost_add), 2)
     return dist[len(seq1), len(seq2)]
 
-##
-# CED 
-#
-# seq1  : Semantic sequence 1
-# seq2  : Semantic sequence 2
-# sim   : Similarity between symbol
-# beta  : Boundary of the fuzzy function
-##
+
 def ced(seq1: List[T], seq2: List[T], sim: Callable[[T, T], float], beta: int) -> float:
+    """
+    :param seq1:    Semantic sequence 1
+    :param seq2:    Semantic sequence 2
+    :param sim:     Similarity between symbol
+    :param beta:    Boundary of the fuzzy function
+    :return:        CED(seq1,seq2)
+    """
     return max(one_sided_ced(seq1, seq2, sim, beta), one_sided_ced(seq2, seq1, sim, beta))

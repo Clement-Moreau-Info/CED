@@ -12,16 +12,15 @@ class Edit(Enum):
     ADD = 2
     DEL = 3
 
-##
-# Contextual Edit Operation
-#
-# op        : Edit operation performed
-# x         : New symbol edited
-# k_edit    : position of edition (in [1, len(S_i)]) 
-# S_i       : Sequence of symbols
-##
-class CxtEdit:
+
+class CxtEdit:   
     def __init__(self, op: Edit, x: T, k_edit: int, seq_i: List[T]):
+        """
+        :param op:      Edit operation (MOD, ADD, DEL)
+        :param x:       Edited symbol
+        :param k_edit:  Edited index in the sequence seq_i
+        :param seq_i:   Edited sequence
+        """
         self.op = op
         self.x = x
         self.k_edit = k_edit - 1
